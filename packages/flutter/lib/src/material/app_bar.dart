@@ -21,13 +21,16 @@ import 'scaffold.dart';
 import 'tabs.dart';
 import 'text_theme.dart';
 import 'theme.dart';
+import 'dart:io';
 
 // Examples can assume:
 // void _airDress() { }
 // void _restitchDress() { }
 // void _repairDress() { }
 
-const double _kLeadingWidth = kToolbarHeight; // So the leading button is square.
+// const double _kLeadingWidth = kToolbarHeight; // So the leading button is square.
+// qidian changed it to fix button with text...
+  const double _kLeadingWidth = 80.0;
 
 // Bottom justify the kToolbarHeight child which may overflow the top.
 class _ToolbarContainerLayout extends SingleChildLayoutDelegate {
@@ -152,13 +155,14 @@ class AppBar extends StatefulWidget implements PreferredSizeWidget {
     this.titleSpacing = NavigationToolbar.kMiddleSpacing,
     this.toolbarOpacity = 1.0,
     this.bottomOpacity = 1.0,
+    this.toolbarHeight = 44.0,
   }) : assert(automaticallyImplyLeading != null),
        assert(elevation != null),
        assert(primary != null),
        assert(titleSpacing != null),
        assert(toolbarOpacity != null),
        assert(bottomOpacity != null),
-       preferredSize = Size.fromHeight(kToolbarHeight + (bottom?.preferredSize?.height ?? 0.0)),
+       preferredSize = new Size.fromHeight(toolbarHeight + (bottom?.preferredSize?.height ?? 0.0)),
        super(key: key);
 
   /// A widget to display before the [title].
@@ -330,6 +334,8 @@ class AppBar extends StatefulWidget implements PreferredSizeWidget {
   /// used by [SliverAppBar] to animate the opacity of the toolbar when the app
   /// bar is scrolled.
   final double bottomOpacity;
+
+  final double toolbarHeight;
 
   /// A size whose height is the sum of [kToolbarHeight] and the [bottom] widget's
   /// preferred height.

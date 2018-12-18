@@ -2011,4 +2011,6 @@ class NavigatorState extends State<Navigator> with TickerProviderStateMixin {
       ),
     );
   }
+
+  List<Route<dynamic>> get history => _history;
 }

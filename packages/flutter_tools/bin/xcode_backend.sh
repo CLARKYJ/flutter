@@ -170,6 +170,8 @@ BuildApp() {
       --ios-arch="${archs}"                                                 \
       ${local_engine_flag}                                                  \
       ${track_widget_creation_flag}
+    
+    echo $local_engine_flag
 
     if [[ $? -ne 0 ]]; then
       EchoError "Failed to build ${project_path}."

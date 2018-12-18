@@ -5,7 +5,7 @@
 import 'package:flutter/painting.dart';
 
 /// The height of the toolbar component of the [AppBar].
-const double kToolbarHeight = 56.0;
+const double kToolbarHeight = 100.0;
 
 /// The height of the bottom navigation bar.
 const double kBottomNavigationBarHeight = 56.0;
