@@ -6,6 +6,7 @@ import 'dart:async';
 
 import '../globals.dart';
 import '../plugins.dart';
+import '../project.dart';
 import '../runner/flutter_command.dart';
 
 class InjectPluginsCommand extends FlutterCommand {
@@ -23,13 +24,17 @@ class InjectPluginsCommand extends FlutterCommand {
   final bool hidden;
 
   @override
-  Future<Null> runCommand() async {
-    injectPlugins();
-    final bool result = hasPlugins();
+  Future<FlutterCommandResult> runCommand() async {
+    final FlutterProject project = await FlutterProject.current();
+    refreshPluginsList(project);
+    await injectPlugins(project);
+    final bool result = hasPlugins(project);
     if (result) {
       printStatus('GeneratedPluginRegistrants successfully written.');
     } else {
       printStatus('This project does not use plugins, no GeneratedPluginRegistrants have been created.');
     }
+
+    return null;
   }
 }

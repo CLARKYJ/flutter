@@ -12,6 +12,7 @@ import 'globals.dart';
 import 'resident_runner.dart';
 import 'tracing.dart';
 
+// TODO(mklim): Test this, flutter/flutter#23031.
 class ColdRunner extends ResidentRunner {
   ColdRunner(
     List<FlutterDevice> devices, {
@@ -20,22 +21,24 @@ class ColdRunner extends ResidentRunner {
     bool usesTerminalUI = true,
     this.traceStartup = false,
     this.applicationBinary,
+    bool saveCompilationTrace = false,
     bool stayResident = true,
     bool ipv6 = false,
   }) : super(devices,
              target: target,
              debuggingOptions: debuggingOptions,
              usesTerminalUI: usesTerminalUI,
+             saveCompilationTrace: saveCompilationTrace,
              stayResident: stayResident,
              ipv6: ipv6);
 
   final bool traceStartup;
-  final String applicationBinary;
+  final File applicationBinary;
 
   @override
   Future<int> run({
     Completer<DebugConnectionInfo> connectionInfoCompleter,
-    Completer<Null> appStartedCompleter,
+    Completer<void> appStartedCompleter,
     String route,
     bool shouldBuild = true
   }) async {
@@ -66,7 +69,7 @@ class ColdRunner extends ResidentRunner {
 
     if (flutterDevices.first.observatoryUris != null) {
       // For now, only support one debugger connection.
-      connectionInfoCompleter?.complete(new DebugConnectionInfo(
+      connectionInfoCompleter?.complete(DebugConnectionInfo(
         httpUri: flutterDevices.first.observatoryUris.first,
         wsUri: flutterDevices.first.vmServices.first.wsAddress,
       ));
@@ -109,16 +112,16 @@ class ColdRunner extends ResidentRunner {
   }
 
   @override
-  Future<Null> handleTerminalCommand(String code) async => null;
+  Future<void> handleTerminalCommand(String code) async { }
 
   @override
-  Future<Null> cleanupAfterSignal() async {
+  Future<void> cleanupAfterSignal() async {
     await stopEchoingDeviceLog();
     await stopApp();
   }
 
   @override
-  Future<Null> cleanupAtFinish() async {
+  Future<void> cleanupAtFinish() async {
     await stopEchoingDeviceLog();
   }
 
@@ -152,7 +155,7 @@ class ColdRunner extends ResidentRunner {
   }
 
   @override
-  Future<Null> preStop() async {
+  Future<void> preStop() async {
     for (FlutterDevice device in flutterDevices) {
       // If we're running in release mode, stop the app using the device logic.
       if (device.vmServices == null || device.vmServices.isEmpty)
